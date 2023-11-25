@@ -24,7 +24,7 @@ export class OpenAiService {
             messages: [
                 {
                     role: 'system',
-                    content: `${content} \n 위 컨텍스트를 기반으로 아래의 질문을 답변해 줘. 위 컨텍스트와 상관없는 질문이라면 '으흐흐에게 문의해주세요' 라고 그대로 답변해 줘`,
+                    content: `${content} \n 위 컨텐츠를 기반으로 아래의 질문을 답변해 줘. 위 컨텍스트와 상관없는 질문이라면 '제가 잘 모르는 질문이에요.' 라고 그대로 답변해 줘`,
                 },
                 { role: 'user', content: question },
             ],
