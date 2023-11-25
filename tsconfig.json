@@ -17,9 +17,19 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "resolveJsonModule": true,
     "paths": {
-      "@chatbot": [
-        "apps/chatbot/**/*"
+      "@app": [
+        "apps"
+      ],
+      "@app/*": [
+        "apps/*"
+      ],
+      "@libs": [
+        "libs"
+      ],
+      "@libs/*": [
+        "libs/*"
       ]
     }
   }
