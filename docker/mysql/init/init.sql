@@ -1,15 +1,16 @@
 create table contents
 (
-    id                  integer unsigned auto_increment,
-    content             text                                  not null,
-    content_hash        varchar(64)                           not null,
-    vector_content_hash varchar(64) default null              null,
-    vectors             json        default null              null,
-    created_at          datetime    default current_timestamp null,
-    updated_at          datetime    default null              null on update current_timestamp,
-    vectored_at         datetime    default null              null on update current_timestamp,
-    constraint contents_pk
-        primary key (id)
+    id                  int unsigned auto_increment
+        primary key,
+    title               varchar(255)                       not null,
+    content             text                               not null,
+    content_hash        varchar(64)                        not null,
+    vector_content_hash varchar(64)                        null,
+    vectors             json                               null,
+    token_count         int unsigned                       null,
+    created_at          datetime default CURRENT_TIMESTAMP null,
+    updated_at          datetime                           null on update CURRENT_TIMESTAMP,
+    vectored_at         datetime                           null on update CURRENT_TIMESTAMP
 );
 
 create index contents_content_hash_index
@@ -17,4 +18,3 @@ create index contents_content_hash_index
 
 create index contents_vector_content_hash_index
     on contents (vector_content_hash);
-

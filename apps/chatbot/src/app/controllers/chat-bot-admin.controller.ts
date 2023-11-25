@@ -1,6 +1,5 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
-import { ChatBotGuard } from '@libs/common/guards/chatbot-guard';
 import { ChatBotService } from '@libs/chat-bot/services/chat-bot.service';
 import { OpenAiService } from '@libs/open-ai/services/open-ai.service';
 import { CosineService } from '@libs/cosine/services/cosine.service';
@@ -28,11 +27,12 @@ export class ChatBotAdminController {
         const embedding = await this.openAiService.crateEmbedding(body.content);
         const vector = embedding.data[0].embedding;
 
-        await this.chatBotService.updateContentVectors(
-            content.id,
-            body.content,
-            vector,
-        );
+        await this.chatBotService.updateContentVectors({
+            id: content.id,
+            content: body.content,
+            vectors: vector,
+            tokenCount: embedding.usage.total_tokens,
+        });
 
         return content.id;
     }

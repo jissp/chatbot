@@ -41,6 +41,12 @@ export class Content {
     })
     vectors?: any;
 
+    @Column({
+        type: 'integer',
+        unsigned: true,
+    })
+    tokenCount?: number | null;
+
     @CreateDateColumn({
         type: 'timestamp',
         default: () => 'CURRENT_TIMESTAMP',
