@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Content } from '@libs/chat-bot/schemas/content';
 import { IsNull, Not, Repository } from 'typeorm';
 import { hash } from '@libs/utils/hash.util';
+import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 
 @Injectable()
 export class ChatBotService {
@@ -24,6 +25,10 @@ export class ChatBotService {
     //         },
     //     });
     // }
+
+    async findMany(where?: FindOptionsWhere<Content>) {
+        return this.contentRepository.findBy(where);
+    }
 
     async findVectors() {
         return this.contentRepository.find({
@@ -55,10 +60,21 @@ export class ChatBotService {
         });
     }
 
-    async updateContentVectors(id: number, content: string, vectors: number[]) {
+    async updateContentVectors({
+        id,
+        content,
+        vectors,
+        tokenCount,
+    }: {
+        id: number;
+        content: string;
+        vectors: number[];
+        tokenCount: number;
+    }) {
         return this.contentRepository.update(id, {
             vectors: vectors,
             vectorContentHash: hash(content),
+            tokenCount: tokenCount,
             vectoredAt: new Date(),
         });
     }

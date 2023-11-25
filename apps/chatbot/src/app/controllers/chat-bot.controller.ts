@@ -6,6 +6,7 @@ import { ChatBotService } from '@libs/chat-bot/services/chat-bot.service';
 import { OpenAiService } from '@libs/open-ai/services/open-ai.service';
 import { CosineService } from '@libs/cosine/services/cosine.service';
 import * as _ from 'lodash';
+import { IsNull, Not } from 'typeorm';
 
 @UseGuards(ChatBotGuard)
 @Controller()
@@ -22,14 +23,18 @@ export class ChatBotController {
     })
     @Get('question')
     async question(@Query() query: QuestionRequestDto) {
-        const contents = await this.chatBotService.findVectors();
+        const contents = await this.chatBotService.findMany({
+            vectorContentHash: Not(IsNull()),
+        });
+
+        const contentMap = _.keyBy(contents, 'id');
         const embeddings = await this.openAiService.crateEmbedding(
             query.question,
         );
 
         const questionVector = embeddings.data[0].embedding;
 
-        const similarityContents = contents.map((content) => {
+        const contentSimilarities = contents.map((content) => {
             const similarity = this.cosineService.similarity(
                 questionVector,
                 content.vectors,
@@ -41,19 +46,34 @@ export class ChatBotController {
             };
         });
 
-        const topSimilarityContent = _.sortBy(
-            similarityContents,
+        const sortedSimilarityContents = _.sortBy(
+            contentSimilarities,
             'similarity',
         ).reverse();
 
-        const firstSimilarityContent = topSimilarityContent[0];
-        const content = await this.chatBotService.getContentById(
-            firstSimilarityContent.id,
+        const tokenLimit = 2500;
+
+        const similarityContentInfo = sortedSimilarityContents.reduce(
+            (acc, cur) => {
+                const content = contentMap[cur.id];
+                const token = content.tokenCount;
+
+                if (acc.tokenCount + token < tokenLimit) {
+                    acc.tokenCount += token;
+                    acc.content.push(content.content);
+                }
+
+                return acc;
+            },
+            { content: [], tokenCount: 0 } as {
+                content: string[];
+                tokenCount: number;
+            },
         );
 
         const response = await this.openAiService.question(
             query.question,
-            content.content,
+            similarityContentInfo.content.join('\n'),
         );
 
         return response.choices[0].message.content;
