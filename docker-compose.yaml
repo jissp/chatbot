@@ -1,0 +1,29 @@
+version: '3.9'
+name: chatbot
+services:
+  mysql:
+    image: mysql:8.1.0
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+    environment:
+      MYSQL_DATABASE: 'chatbot'
+      MYSQL_USER: 'chatbot'
+      MYSQL_PASSWORD: 'chatbot'
+      MYSQL_ROOT_PASSWORD: 'chatbot'
+    volumes:
+      - ./docker/mysql/init/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - chatbot-network
+  redis:
+    image: redis:7.2.2-alpine3.18
+    ports:
+      - '6379:6379'
+    networks:
+      - chatbot-network
+networks:
+  chatbot-network:
+    driver: bridge
