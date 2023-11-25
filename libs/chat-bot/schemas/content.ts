@@ -14,26 +14,32 @@ export class Content {
     id?: number;
 
     @Column({
+        type: 'varchar',
+        length: 255,
+    })
+    title: string;
+
+    @Column({
         type: 'text',
     })
-    content?: string;
+    content!: string;
 
     @Column({
         type: 'varchar',
         length: 64,
     })
-    contentHash: string;
+    contentHash!: string;
 
     @Column({
         type: 'varchar',
         length: 64,
     })
-    vectorContentHash: string;
+    vectorContentHash?: string | null;
 
     @Column({
         type: 'json',
     })
-    vectors: any;
+    vectors?: any;
 
     @CreateDateColumn({
         type: 'timestamp',

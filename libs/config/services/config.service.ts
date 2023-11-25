@@ -8,6 +8,10 @@ export class ConfigService {
         return process.env[key] ?? null;
     }
 
+    public getChatBotHeader(): string {
+        return this.get('CHAT_BOT_HEADER');
+    }
+
     public getOpenAiApiKey(): string {
         return this.get('OPENAI_API_KEY');
     }

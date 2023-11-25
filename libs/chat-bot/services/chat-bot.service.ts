@@ -11,6 +11,20 @@ export class ChatBotService {
         private readonly contentRepository: Repository<Content>,
     ) {}
 
+    // async findSimilarityContent(content: string, vectors: number[]) {
+    //     const contents = await this.contentRepository.findBy({
+    //         vectorContentHash: Not(IsNull()),
+    //     });
+    //
+    //
+    //     return this.contentRepository.findOneBy({
+    //         where: {
+    //             vectors: vectors,
+    //             vectorContentHash: hash(content),
+    //         },
+    //     });
+    // }
+
     async findVectors() {
         return this.contentRepository.find({
             select: ['id', 'vectors'],
@@ -23,6 +37,14 @@ export class ChatBotService {
     async getContentById(id: number) {
         return this.contentRepository.findOneBy({
             id,
+        });
+    }
+
+    async createContent(title: string, content: string) {
+        return this.contentRepository.save({
+            title: title,
+            content: content,
+            contentHash: hash(content),
         });
     }
 

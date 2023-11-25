@@ -7,6 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build ./apps/chatbot",
+    "start:local": "dotenv -e ./apps/chatbot/env/.env nest start chatbot --watch",
     "start:dev": "dotenv -e ./apps/chatbot/src/env/.env nest start chatbot --watch",
     "start:production": "NODE_ENV=production PM2_KILL_SIGNAL=SIGTERM PM2_KILL_TIMEOUT=5000 pm2-runtime dist/apps/chatbot/main.js --name chatbot"
   },
@@ -14,9 +15,14 @@
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/swagger": "^7.1.16",
     "@nestjs/typeorm": "^10.0.1",
+    "@types/lodash": "^4.14.202",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
     "compute-cosine-similarity": "^1.1.0",
     "dotenv-cli": "^7.3.0",
+    "lodash": "^4.17.21",
     "mysql2": "^3.6.5",
     "openai": "^4.20.0",
     "reflect-metadata": "^0.1.13",
@@ -46,5 +52,29 @@
     "ts-node": "^10.0.0",
     "tsconfig-paths": "4.1.1",
     "typescript": "^4.7.4"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": ".",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "./coverage",
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/apps/",
+      "<rootDir>/libs/"
+    ],
+    "moduleNameMapper": {
+      "^@libs(|/.*)$": "<rootDir>/libs/$1"
+    }
   }
 }
