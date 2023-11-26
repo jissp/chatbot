@@ -7,9 +7,9 @@ import {
 } from 'typeorm';
 
 @Entity({
-    name: 'contents',
+    name: 'datasets',
 })
-export class Content {
+export class Dataset {
     @PrimaryGeneratedColumn()
     id?: number;
 
