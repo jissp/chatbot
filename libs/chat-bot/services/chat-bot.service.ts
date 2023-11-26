@@ -1,48 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Content } from '@libs/chat-bot/schemas/content';
-import { IsNull, Not, Repository } from 'typeorm';
+import { Dataset } from '@libs/chat-bot/schemas/dataset';
+import { Repository } from 'typeorm';
 import { hash } from '@libs/utils/hash.util';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 
 @Injectable()
 export class ChatBotService {
     constructor(
-        @InjectRepository(Content)
-        private readonly contentRepository: Repository<Content>,
+        @InjectRepository(Dataset)
+        private readonly contentRepository: Repository<Dataset>,
     ) {}
 
-    // async findSimilarityContent(content: string, vectors: number[]) {
-    //     const contents = await this.contentRepository.findBy({
-    //         vectorContentHash: Not(IsNull()),
-    //     });
-    //
-    //
-    //     return this.contentRepository.findOneBy({
-    //         where: {
-    //             vectors: vectors,
-    //             vectorContentHash: hash(content),
-    //         },
-    //     });
-    // }
-
-    async findMany(where?: FindOptionsWhere<Content>) {
+    async findMany(where?: FindOptionsWhere<Dataset>) {
         return this.contentRepository.findBy(where);
-    }
-
-    async findVectors() {
-        return this.contentRepository.find({
-            select: ['id', 'vectors'],
-            where: {
-                vectoredAt: Not(IsNull()),
-            },
-        });
-    }
-
-    async getContentById(id: number) {
-        return this.contentRepository.findOneBy({
-            id,
-        });
     }
 
     async createContent(title: string, content: string) {

@@ -1,4 +1,4 @@
-create table contents
+create table datasets
 (
     id                  int unsigned auto_increment
         primary key,
@@ -13,8 +13,8 @@ create table contents
     vectored_at         datetime                           null on update CURRENT_TIMESTAMP
 );
 
-create index contents_content_hash_index
+create index datasets_content_hash_index
     on contents (content_hash);
 
-create index contents_vector_content_hash_index
+create index datasets_vector_content_hash_index
     on contents (vector_content_hash);
