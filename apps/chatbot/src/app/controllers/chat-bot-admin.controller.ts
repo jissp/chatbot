@@ -1,9 +1,11 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { ChatBotService } from '@libs/chat-bot/services/chat-bot.service';
 import { OpenAiService } from '@libs/open-ai/services/open-ai.service';
 import { CreateContentRequestDto } from '@app/chatbot/src/app/controllers/dtos/create-content.request.dto';
+import { ChatBotGuard } from '@libs/common/guards/chatbot-guard';
 
+@UseGuards(ChatBotGuard)
 @Controller('admin')
 export class ChatBotAdminController {
     constructor(
