@@ -51,14 +51,17 @@ export class ChatBotController {
             'similarity',
         ).reverse();
 
-        const tokenLimit = 2500;
+        const tokenLimit = 0;
 
         const similarityContentInfo = sortedSimilarityContents.reduce(
             (acc, cur) => {
                 const content = contentMap[cur.id];
                 const token = content.tokenCount;
 
-                if (acc.tokenCount + token < tokenLimit) {
+                if (
+                    acc.tokenCount + token < tokenLimit ||
+                    acc.content.length === 0
+                ) {
                     acc.tokenCount += token;
                     acc.content.push(content.content);
                 }
