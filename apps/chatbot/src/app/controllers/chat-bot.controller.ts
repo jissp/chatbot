@@ -23,46 +23,46 @@ export class ChatBotController {
     })
     @Get('question')
     async question(@Query() query: QuestionRequestDto) {
-        const contents = await this.chatBotService.findMany({
+        // DataSet 전체 조회
+        const dataSets = await this.chatBotService.findMany({
             vectorContentHash: Not(IsNull()),
         });
 
-        const contentMap = _.keyBy(contents, 'id');
-        const embeddings = await this.openAiService.crateEmbedding(
+        // 질문을 OpenAI API 를 통해서 Vector 로 변환
+        const embedding = await this.openAiService.crateEmbedding(
             query.question,
         );
 
-        const questionVector = embeddings.data[0].embedding;
-
-        const contentSimilarities = contents.map((content) => {
-            const similarity = this.cosineService.similarity(
-                questionVector,
-                content.vectors,
-            );
-
+        // 유사도 계산
+        const dataSetSimilarities = dataSets.map((dataSet) => {
             return {
-                id: content.id,
-                similarity,
+                id: dataSet.id,
+                similarity: this.cosineService.similarity(
+                    embedding.vector,
+                    dataSet.vectors,
+                ),
             };
         });
 
-        const sortedSimilarityContents = _.sortBy(
-            contentSimilarities,
+        // 유사도를 내림차순으로 정렬
+        const sortedSimilarityDataSets = _.sortBy(
+            dataSetSimilarities,
             'similarity',
         ).reverse();
 
+        // 유사도가 높은 순으로 n개의 데이터를 컨텍스트로 사용
         const tokenLimit = 0;
-
-        const similarityContentInfo = sortedSimilarityContents.reduce(
+        const dataSetMap = _.keyBy(dataSets, 'id');
+        const similarityDataSetInfos = sortedSimilarityDataSets.reduce(
             (acc, cur) => {
-                const content = contentMap[cur.id];
-                const token = content.tokenCount;
+                const content = dataSetMap[cur.id];
 
-                if (
-                    acc.tokenCount + token < tokenLimit ||
-                    acc.content.length === 0
-                ) {
-                    acc.tokenCount += token;
+                const isPush =
+                    acc.tokenCount + content.tokenCount < tokenLimit ||
+                    acc.content.length === 0;
+
+                if (isPush) {
+                    acc.tokenCount += content.tokenCount;
                     acc.content.push(content.content);
                 }
 
@@ -74,11 +74,10 @@ export class ChatBotController {
             },
         );
 
-        const response = await this.openAiService.question(
+        // OpenAI API 를 통해서 답변을 응답
+        return await this.openAiService.question(
             query.question,
-            similarityContentInfo.content.join('\n'),
+            similarityDataSetInfos.content.join('\n'),
         );
-
-        return response.choices[0].message.content;
     }
 }

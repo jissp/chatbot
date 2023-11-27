@@ -12,14 +12,19 @@ export class OpenAiService {
     }
 
     async crateEmbedding(input: string) {
-        return this.client.embeddings.create({
+        const response = await this.client.embeddings.create({
             input,
             model: 'text-embedding-ada-002',
         });
+
+        return {
+            vector: response.data[0].embedding,
+            tokens: response.usage.total_tokens,
+        };
     }
 
     async question(question: string, content: string) {
-        return this.client.chat.completions.create({
+        const response = await this.client.chat.completions.create({
             model: 'gpt-3.5-turbo-1106',
             messages: [
                 {
@@ -29,5 +34,7 @@ export class OpenAiService {
                 { role: 'user', content: question },
             ],
         });
+
+        return response.choices[0].message.content;
     }
 }

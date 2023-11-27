@@ -9,29 +9,29 @@ import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 export class ChatBotService {
     constructor(
         @InjectRepository(Dataset)
-        private readonly contentRepository: Repository<Dataset>,
+        private readonly dataSetRepository: Repository<Dataset>,
     ) {}
 
     async findMany(where?: FindOptionsWhere<Dataset>) {
-        return this.contentRepository.findBy(where);
+        return this.dataSetRepository.findBy(where);
     }
 
-    async createContent(title: string, content: string) {
-        return this.contentRepository.save({
+    async createDataSet(title: string, content: string) {
+        return this.dataSetRepository.save({
             title: title,
             content: content,
             contentHash: hash(content),
         });
     }
 
-    async updateContent(id: number, content: string) {
-        return this.contentRepository.update(id, {
+    async updateDataSet(id: number, content: string) {
+        return this.dataSetRepository.update(id, {
             content: content,
             contentHash: hash(content),
         });
     }
 
-    async updateContentVectors({
+    async updateDataSetVectors({
         id,
         content,
         vectors,
@@ -42,7 +42,7 @@ export class ChatBotService {
         vectors: number[];
         tokenCount: number;
     }) {
-        return this.contentRepository.update(id, {
+        return this.dataSetRepository.update(id, {
             vectors: vectors,
             vectorContentHash: hash(content),
             tokenCount: tokenCount,
