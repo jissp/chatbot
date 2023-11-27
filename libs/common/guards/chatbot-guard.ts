@@ -12,10 +12,8 @@ export class ChatBotGuard implements CanActivate {
     ): boolean | Promise<boolean> | Observable<boolean> {
         const request = context.switchToHttp().getRequest();
 
-        return true;
-
         return (
-            request.headers[CHAT_BOT_HEADER_KEY] !==
+            request.headers[CHAT_BOT_HEADER_KEY] ===
             this.configService.getChatBotHeader()
         );
     }
