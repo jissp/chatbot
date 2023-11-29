@@ -25,7 +25,7 @@ export class ChatBotController {
     async question(@Query() query: QuestionRequestDto) {
         // DataSet 전체 조회
         const dataSets = await this.chatBotService.findMany({
-            vectorContentHash: Not(IsNull()),
+            vectoredAt: Not(IsNull()),
         });
 
         // 질문을 OpenAI API 를 통해서 Vector 로 변환
@@ -39,7 +39,7 @@ export class ChatBotController {
                 id: dataSet.id,
                 similarity: this.cosineService.similarity(
                     embedding.vector,
-                    dataSet.vectors,
+                    dataSet.vector,
                 ),
             };
         });
