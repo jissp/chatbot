@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
-export class CreateContentRequestDto {
+export class CreateDataSetRequestDto {
     @ApiProperty({
         description: '데이터명',
         example: '주변 맛집',
