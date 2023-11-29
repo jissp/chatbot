@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Dataset } from '@libs/chat-bot/schemas/dataset';
 import { Repository } from 'typeorm';
-import { hash } from '@libs/utils/hash.util';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 
 @Injectable()
@@ -20,33 +19,35 @@ export class ChatBotService {
         return this.dataSetRepository.save({
             title: title,
             content: content,
-            contentHash: hash(content),
         });
     }
 
     async updateDataSet(id: number, content: string) {
         return this.dataSetRepository.update(id, {
             content: content,
-            contentHash: hash(content),
         });
     }
 
     async updateDataSetVectors({
         id,
-        content,
         vectors,
         tokenCount,
     }: {
         id: number;
-        content: string;
         vectors: number[];
         tokenCount: number;
     }) {
         return this.dataSetRepository.update(id, {
-            vectors: vectors,
-            vectorContentHash: hash(content),
+            vector: vectors,
             tokenCount: tokenCount,
             vectoredAt: new Date(),
         });
+    }
+
+    async getDiffContentVectorList() {
+        return this.dataSetRepository
+            .createQueryBuilder()
+            .where('vectored_at < updated_at')
+            .getMany();
     }
 }

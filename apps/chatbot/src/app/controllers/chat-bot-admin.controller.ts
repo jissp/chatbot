@@ -26,15 +26,6 @@ export class ChatBotAdminController {
             body.content,
         );
 
-        const embedding = await this.openAiService.crateEmbedding(body.content);
-
-        await this.chatBotService.updateDataSetVectors({
-            id: dataSet.id,
-            content: body.content,
-            vectors: embedding.vector,
-            tokenCount: embedding.tokens,
-        });
-
         return dataSet.id;
     }
 
@@ -52,19 +43,6 @@ export class ChatBotAdminController {
             id,
             body.content,
         );
-
-        if (result.affected) {
-            const embedding = await this.openAiService.crateEmbedding(
-                body.content,
-            );
-
-            await this.chatBotService.updateDataSetVectors({
-                id,
-                content: body.content,
-                vectors: embedding.vector,
-                tokenCount: embedding.tokens,
-            });
-        }
 
         return id;
     }

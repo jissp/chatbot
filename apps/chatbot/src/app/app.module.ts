@@ -7,6 +7,10 @@ import { CosineModule } from '@libs/cosine/cosine.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@libs/config/services/config.service';
 import { ChatBotAdminController } from '@app/chatbot/src/app/controllers/chat-bot-admin.controller';
+import { ScheduleModule } from '@nestjs/schedule';
+import { DataSetUpdateSchedule } from '@app/chatbot/src/app/schedules/data-set-update.schedule';
+
+const scheduleProviders = [DataSetUpdateSchedule];
 
 @Module({
     imports: [
@@ -16,12 +20,13 @@ import { ChatBotAdminController } from '@app/chatbot/src/app/controllers/chat-bo
             useFactory: async (configService: ConfigService) =>
                 configService.getDatabaseConfig(),
         }),
+        ScheduleModule.forRoot(),
         ConfigModule,
         ChatBotModule,
         OpenAiModule,
         CosineModule,
     ],
     controllers: [ChatBotController, ChatBotAdminController],
-    providers: [],
+    providers: [...scheduleProviders],
 })
 export class AppModule {}

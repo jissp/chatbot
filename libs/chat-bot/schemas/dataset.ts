@@ -25,21 +25,9 @@ export class Dataset {
     content!: string;
 
     @Column({
-        type: 'varchar',
-        length: 64,
-    })
-    contentHash!: string;
-
-    @Column({
-        type: 'varchar',
-        length: 64,
-    })
-    vectorContentHash?: string | null;
-
-    @Column({
         type: 'json',
     })
-    vectors?: any;
+    vector?: any;
 
     @Column({
         type: 'integer',
