@@ -1,9 +1,10 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { ChatBotService } from '@libs/chat-bot/services/chat-bot.service';
 import { OpenAiService } from '@libs/open-ai/services/open-ai.service';
 import { CreateDataSetRequestDto } from '@app/chatbot/src/app/controllers/dtos/create-data-set.request.dto';
 import { ChatBotGuard } from '@libs/common/guards/chatbot-guard';
+import { UpdateDataSetRequestDto } from '@app/chatbot/src/app/controllers/dtos/update-data-set.request.dto';
 
 @UseGuards(ChatBotGuard)
 @Controller('admin')
@@ -35,5 +36,36 @@ export class ChatBotAdminController {
         });
 
         return dataSet.id;
+    }
+
+    @ApiOperation({
+        operationId: 'Chatbot.updateDataSet',
+        description: '데이터를 추가합니다.',
+    })
+    @Put('dataSet/:id')
+    async updateDataSet(
+        @Param('id') id: number,
+        @Body() body: UpdateDataSetRequestDto,
+    ) {
+        //
+        const result = await this.chatBotService.updateDataSet(
+            id,
+            body.content,
+        );
+
+        if (result.affected) {
+            const embedding = await this.openAiService.crateEmbedding(
+                body.content,
+            );
+
+            await this.chatBotService.updateDataSetVectors({
+                id,
+                content: body.content,
+                vectors: embedding.vector,
+                tokenCount: embedding.tokens,
+            });
+        }
+
+        return id;
     }
 }
