@@ -12,7 +12,7 @@ RUN npm install
 COPY . .
 
 #RUN npm run build:${APP_NAME}
-RUN npm run build:crawler
+RUN npm run build
 
 FROM node:20.9.0-alpine3.18 as runner
 

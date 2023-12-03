@@ -22,8 +22,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.PACKAGESTOKEN }}
 
-        # Build and push (Crawler)
-      - name: Build and push (Crawler)
+        # Build and push
+      - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
