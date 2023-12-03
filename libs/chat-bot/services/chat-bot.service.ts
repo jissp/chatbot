@@ -56,6 +56,7 @@ export class ChatBotService {
         return this.dataSetRepository
             .createQueryBuilder()
             .where('vectored_at < updated_at')
+            .orWhere('vectored_at IS NULL')
             .getMany();
     }
 
