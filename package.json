@@ -9,7 +9,7 @@
     "build": "nest build ./apps/chatbot",
     "start:local": "dotenv -e ./apps/chatbot/env/.env nest start chatbot --watch",
     "start:dev": "dotenv -e ./apps/chatbot/src/env/.env nest start chatbot --watch",
-    "start:production": "NODE_ENV=production PM2_KILL_SIGNAL=SIGTERM PM2_KILL_TIMEOUT=5000 pm2-runtime dist/apps/chatbot/main.js --name chatbot"
+    "start:production": "NODE_ENV=production PM2_KILL_SIGNAL=SIGTERM PM2_KILL_TIMEOUT=5000 pm2-runtime dist/apps/chatbot/apps/chatbot/src/main.js --name chatbot"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
