@@ -23,7 +23,7 @@ export class DataSetUpdateSchedule {
 
         const result = await Promise.allSettled(
             dataSets.map(async (dataSet) => {
-                const embedding = await this.openAiService.crateEmbedding(
+                const embedding = await this.openAiService.embedding(
                     dataSet.content,
                 );
 
