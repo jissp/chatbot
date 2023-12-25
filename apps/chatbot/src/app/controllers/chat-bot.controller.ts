@@ -26,9 +26,7 @@ export class ChatBotController {
         });
 
         // OpenAI API 를 통해서 질문을 Vector 로 변환
-        const embedding = await this.openAiService.crateEmbedding(
-            query.question,
-        );
+        const embedding = await this.openAiService.embedding(query.question);
 
         // 유사도 계산
         const dataSetSimilarities = this.chatBotService.calculateSimilarity({

@@ -31,7 +31,7 @@ export class ChatBotAdminController {
 
     @ApiOperation({
         operationId: 'Chatbot.updateDataSet',
-        description: '데이터를 추가합니다.',
+        description: '데이터를 수정합니다.',
     })
     @Put('dataSet/:id')
     async updateDataSet(

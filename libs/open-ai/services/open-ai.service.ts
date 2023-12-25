@@ -15,7 +15,7 @@ export class OpenAiService {
      * 문자열을 Vector 로 변환하는 API 를 호출한다.
      * @param input
      */
-    async crateEmbedding(input: string) {
+    async embedding(input: string) {
         const response = await this.client.embeddings.create({
             input,
             model: 'text-embedding-ada-002',
